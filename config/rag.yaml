@@ -1,0 +1,55 @@
+# ─────────────────────────────────────────────────────────────────────────
+# Single source of truth for the RAG pipeline. EVERY knob lives here.
+# The AutoTuner (P5) perturbs THIS file — nothing downstream is hardcoded.
+# ─────────────────────────────────────────────────────────────────────────
+
+corpus:
+  dataset: hotpotqa/hotpot_qa
+  subset: distractor        # hotpot_qa config: distractor | fullwiki
+  split: validation
+  num_questions: 30         # size of the golden slice
+  seed: 42
+
+chunking:
+  chunk_size: 512           # characters
+  chunk_overlap: 64         # characters of overlap between adjacent chunks
+
+embedding:
+  model: sentence-transformers/all-MiniLM-L6-v2
+  device: cpu               # cpu | cuda  (RTX 4060 supports cuda; cpu is safe default)
+
+vector_store:
+  provider: chroma
+  persist_dir: .chroma
+  collection: autorag
+
+retrieval:
+  top_k: 4
+  reranker:
+    enabled: false
+    model: cross-encoder/ms-marco-MiniLM-L-6-v2
+    top_n: 4                # keep this many after reranking
+
+generator:
+  provider: openai          # openai | anthropic
+  model: gpt-4o-mini        # anthropic option: claude-haiku-4-5-20251001
+  temperature: 0.0
+  max_tokens: 512
+  prompt_template: |
+    Answer the question using ONLY the context below. If the answer is not
+    contained in the context, reply exactly: "I don't know."
+
+    Context:
+    {context}
+
+    Question: {question}
+    Answer:
+
+judge:                      # used from P1 onward (LLM-as-judge for RAGAS)
+  provider: openai          # openai | anthropic
+  model: gpt-4o-mini        # anthropic option: claude-haiku-4-5-20251001
+  temperature: 0.0
+
+cost:                       # USD per 1M tokens, for per-run $ logging
+  gpt-4o-mini: { input: 0.15, output: 0.60 }
+  claude-haiku-4-5-20251001: { input: 1.00, output: 5.00 }

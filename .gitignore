@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# Secrets / env
+.env
+
+# Vector store + model + run artifacts
+.chroma/
+.cache/
+results/*.jsonl
+!results/sample_run.jsonl
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

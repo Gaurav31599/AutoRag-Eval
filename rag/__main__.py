@@ -33,7 +33,7 @@ def main() -> None:
     print(out["answer"])
     print("\n=== RETRIEVED CONTEXT ===")
     for i, ctx in enumerate(out["contexts"], 1):
-        snippet = ctx[:400] + ("…" if len(ctx) > 400 else "")
+        snippet = ctx[:400] + ("..." if len(ctx) > 400 else "")
         print(f"\n[{i}] {snippet}")
     u = out["usage"]
     print(f"\n=== TOKENS ===  in={u['input']}  out={u['output']}")

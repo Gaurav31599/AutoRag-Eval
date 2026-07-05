@@ -8,11 +8,15 @@ venv/
 # Secrets / env
 .env
 
-# Vector store + model + run artifacts
+# Vector store + answer cache (rebuilt locally)
 .chroma/
 .cache/
-results/*.jsonl
-!results/sample_run.jsonl
+
+# Eval runs: commit curated baseline/demo runs (the deployed dashboard reads
+# these), ignore ad-hoc scratch runs.
+results/*.json
+!results/baseline-*.json
+!results/demo-*.json
 
 # OS / editor
 .DS_Store

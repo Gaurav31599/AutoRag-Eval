@@ -16,8 +16,9 @@ the pipeline config on its own.
   reranker, prompt, embedding model) lives in one [`config/rag.yaml`](config/rag.yaml).
   The AutoTuner perturbs that file; nothing is hardcoded.
 
-> Status: **P1 complete** — config-driven RAG + RAGAS eval harness + live
-> dashboard. P2–P5 (CI gate, differentiators, monitoring, AutoTuner) in progress.
+> Status: **P2 complete** — config-driven RAG + RAGAS eval harness + live
+> dashboard + CI regression gate. P3–P5 (differentiators, monitoring,
+> AutoTuner) in progress.
 
 ---
 
@@ -148,3 +149,49 @@ store — so deployment is a one-time click-through:
 
 To refresh the deployed data, run `python -m eval.run --tag baseline` locally
 and push the new `results/baseline-*.json`.
+
+---
+
+## P2 — CI regression gate ✅
+
+A pytest suite scores the golden set with the RAGAS judge on every PR; GitHub
+Actions **blocks the merge** when mean faithfulness drops below the gate (0.60).
+
+```bash
+python -m pytest tests/test_regression.py -s -q     # ~30s, faithfulness only
+```
+
+- `tests/test_regression.py` — runs the real pipeline with the current config,
+  scores RAGAS faithfulness over the full golden set, fails if the mean < gate.
+  Self-explaining: each failing case prints its answer.
+- `.github/workflows/ci.yml` — install → `python -m rag ingest` → gate, on every
+  `pull_request` (and pushes to `main`). Needs an `OPENAI_API_KEY` repo secret.
+
+### Why the gate uses RAGAS faithfulness, not DeepEval's
+
+A finding worth stating plainly: **DeepEval and RAGAS define "faithfulness"
+differently.** DeepEval only flags claims that *contradict* the retrieved
+context; RAGAS flags claims that aren't *supported* by it. So DeepEval's
+faithfulness is blind to a retrieval regression, while RAGAS's catches it —
+measured on the same chunk-size change:
+
+| `chunk_size` | RAGAS faithfulness | DeepEval faithfulness |
+|---|---|---|
+| 1200 (baseline) | **0.71** | 0.75 |
+| 200 (regression) | **0.48** | 0.76 |
+
+The corollary matters for eval design: **faithfulness alone can't catch a
+retrieval regression** — you need a support-based judge (RAGAS) or a
+recall/relevancy metric. The gate uses RAGAS faithfulness for exactly this
+reason.
+
+### The caught regression
+
+A demo PR shrinks `chunk_size` 1200 → 200. Faithfulness drops **0.71 → 0.48**,
+below the 0.60 gate, and CI blocks the merge:
+
+<!-- TODO: screenshot of the blocked PR check (added when the demo PR runs) -->
+
+**DoD:** a demo PR that changes chunk size, drops faithfulness, and is blocked
+in CI. *(Gate + before/after verified locally; live demo PR pending — see
+"Tomorrow" steps.)*

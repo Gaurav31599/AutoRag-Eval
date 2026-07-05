@@ -42,6 +42,28 @@ def _embeddings(cfg: dict):
     )
 
 
+def score_faithfulness(records: list[dict], cfg: dict) -> list[float | None]:
+    """Score only RAGAS faithfulness (no embeddings needed) — the CI gate metric.
+
+    RAGAS faithfulness flags claims *not supported* by the retrieved context, so
+    unlike DeepEval's (contradiction-only) version it drops when retrieval
+    degrades — which is what lets it catch a chunk-size regression.
+    """
+    samples = [
+        SingleTurnSample(
+            user_input=r["question"],
+            response=r["answer"],
+            retrieved_contexts=r["contexts"],
+            reference=r["ground_truth"],
+        )
+        for r in records
+    ]
+    dataset = EvaluationDataset(samples=samples)
+    llm = LangchainLLMWrapper(_judge_llm(cfg))
+    result = evaluate(dataset, metrics=[faithfulness], llm=llm)
+    return result.to_pandas()[faithfulness.name].tolist()
+
+
 def score(records: list[dict], cfg: dict):
     """Return (pandas DataFrame of per-question scores, judge_usage dict)."""
     samples = [

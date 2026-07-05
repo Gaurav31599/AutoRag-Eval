@@ -10,7 +10,12 @@ venv/
 
 # Vector store + answer cache (rebuilt locally)
 .chroma/
+.chroma_reg/
 .cache/
+
+# Local-only regression config used to pre-verify the gate (the demo PR edits
+# config/rag.yaml directly instead)
+config/rag.regression.yaml
 
 # Eval runs: commit curated baseline/demo runs (the deployed dashboard reads
 # these), ignore ad-hoc scratch runs.

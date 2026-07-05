@@ -24,3 +24,6 @@ langchain-huggingface==0.1.2
 streamlit>=1.38
 plotly>=5.23
 pandas>=2.0
+
+# P2 — CI regression gate (pytest-native, self-explaining metrics)
+deepeval>=4.0

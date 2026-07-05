@@ -1,0 +1,39 @@
+name: RAG regression gate
+
+# Runs the real RAG pipeline with the PR's config over a CI subset of the golden
+# set and fails the check if mean faithfulness drops below the gate (0.60).
+# A PR that regresses the config gets blocked from merging.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  faithfulness-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install CPU torch (avoids the large CUDA build)
+        run: pip install torch --index-url https://download.pytorch.org/whl/cpu
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build corpus + vector store
+        env:
+          HF_HUB_DISABLE_PROGRESS_BARS: "1"
+        run: python -m rag ingest
+
+      - name: Regression gate (RAGAS faithfulness >= 0.60)
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          # Full golden set (stable mean); a small subset is too noisy to gate on.
+          HF_HUB_DISABLE_PROGRESS_BARS: "1"
+        run: python -m pytest tests/test_regression.py -s -q

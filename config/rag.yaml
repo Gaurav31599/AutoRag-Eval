@@ -11,8 +11,8 @@ corpus:
   seed: 42
 
 chunking:
-  chunk_size: 1200          # characters (keep HotpotQA paragraphs mostly intact)
-  chunk_overlap: 150        # characters of overlap between adjacent chunks
+  chunk_size: 200          # characters (SHRUNK from 1200 — fragments multi-hop context)
+  chunk_overlap: 20        # characters of overlap between adjacent chunks
 
 embedding:
   model: sentence-transformers/all-MiniLM-L6-v2

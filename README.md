@@ -2,6 +2,8 @@
 
 **Builds AI systems with verification built in.**
 
+**🔴 Live dashboard → [autorag-eval.streamlit.app](https://autorag-eval.streamlit.app/)**
+
 A RAG evaluation harness that grows into an autonomous config optimizer. It
 evaluates a retrieval-augmented pipeline on canonical metrics, gates
 regressions in CI, surfaces a live dashboard, and closes into a loop that tunes

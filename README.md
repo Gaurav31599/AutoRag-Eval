@@ -15,20 +15,35 @@ the pipeline config on its own.
 - **Everything is config-driven** — every knob (chunk size, overlap, top-k,
   reranker, prompt, embedding model) lives in one [`config/rag.yaml`](config/rag.yaml).
   The AutoTuner perturbs that file; nothing is hardcoded.
+- **Self-explaining** — failing cases come with the judge's reason, and a
+  context-correctness layer flags answers grounded in stale/wrong retrieved
+  context even when faithfulness looks high.
 
-> Status: **P2 complete** — config-driven RAG + RAGAS eval harness + live
-> dashboard + CI regression gate. P3–P5 (differentiators, monitoring,
+> Status: **P3 complete** — RAG target · eval harness · live dashboard · CI
+> regression gate · self-explaining diagnostics. P4–P5 (Langfuse monitoring,
 > AutoTuner) in progress.
 
 ---
 
-## Architecture (target)
+## Versions
+
+Each release has its own focused write-up:
+
+| Version | What it adds | Doc |
+|---|---|---|
+| **v1** | Config-driven RAG target · RAGAS eval harness · live dashboard | [docs/v1.md](docs/v1.md) |
+| **v2** | CI regression gate (RAGAS faithfulness) blocking bad PRs | [docs/v2.md](docs/v2.md) |
+| **v3** | Self-explaining failure drill-down · cost-per-run · context-correctness layer | [docs/v3.md](docs/v3.md) |
+
+---
+
+## Architecture
 
 ```
 config/rag.yaml ──► rag/ (ingest · retrieve · generate)
                       │
-                      ├─► eval/  RAGAS 4 metrics · LLM-as-judge · cost · cache
-                      ├─► tests/ DeepEval pytest gate  ──► GitHub Actions
+                      ├─► eval/  RAGAS 4 metrics · LLM-as-judge · cost · cache · diagnostics
+                      ├─► tests/ RAGAS-faithfulness pytest gate ──► GitHub Actions
                       ├─► dashboard/ Streamlit + Plotly ──► Streamlit Cloud
                       └─► tuner/  propose → run → score → keep/discard (P5)
 ```
@@ -54,144 +69,17 @@ python -m rag ingest        # or: make ingest
 # 4. ask a question (retrieve + answer)
 python -m rag "who directed the 1966 batman movie"
 #   or: make rag q="who directed the 1966 batman movie"
+
+# 5. evaluate + view the dashboard
+python -m eval.run --tag baseline
+streamlit run dashboard/app.py         # local dashboard at :8501
 ```
 
 `python -m rag ingest` downloads a 30-question slice of HotpotQA, pools the
 paragraphs into a corpus, chunks + embeds them into Chroma, and writes the
 human-checkable golden set to [`data/golden/golden.jsonl`](data/golden/).
 
-A query prints the generated answer, the retrieved context, and token usage:
-
-```
-=== ANSWER ===
-Leslie H. Martinson directed the 1966 Batman movie.
-
-=== RETRIEVED CONTEXT ===
-[1] Batman (1966 film) is a ... directed by Leslie H. Martinson ...
-...
-
-=== TOKENS ===  in=812  out=14
-```
-
 ### Windows note
 `make` isn't installed by default on Windows. Every target is a thin wrapper
-over `python -m rag ...` — use those directly if you don't have make.
-
----
-
-## P0 — Config-driven RAG target ✅
-
-- One YAML holds every knob (`config/rag.yaml`).
-- `rag/ingest.py` — HotpotQA slice → paragraph corpus → char-chunk → embed →
-  Chroma; writes the golden Q/A set.
-- `rag/retriever.py` — query embed → Chroma top-k → optional cross-encoder reranker.
-- `rag/generator.py` — API answer synthesis (OpenAI / Anthropic), returns token usage.
-- `rag/pipeline.py` — `RAGPipeline(cfg).answer(q)` → answer + contexts + usage.
-
-**DoD:** `make rag "question"` (or `python -m rag "question"`) returns an
-answer plus the retrieved context. ✅
-
----
-
-## P1 — Eval harness + dashboard ✅
-
-RAGAS four metrics via LLM-as-judge over the golden set, plus a live dashboard.
-
-```bash
-python -m eval.run --tag baseline      # score the full golden set
-python -m eval.run --limit 5           # quick/cheap subset
-streamlit run dashboard/app.py         # local dashboard at :8501
-```
-
-- `eval/harness.py` — runs the pipeline over the golden set with an **answer
-  cache** (hash of the retrieval+generation knobs); re-running the same config
-  re-scores for free.
-- `eval/metrics.py` — RAGAS `faithfulness`, `answer_relevancy`,
-  `context_precision`, `context_recall`. Judge model from config
-  (`gpt-4o-mini` default, Claude Haiku selectable); answer-relevancy embeddings
-  run locally (sentence-transformers) to stay API-light.
-- `eval/cost.py` — per-run **tokens + USD** (generator + judge), logged into
-  every result file.
-- `dashboard/app.py` — Streamlit + Plotly: per-run metric cards, a bar chart
-  against the faithfulness gate, a cross-run trend, and a per-question
-  drill-down. Reads only committed `results/*.json`, so it deploys with no API
-  key or vector store.
-
-### The harness earning its keep
-
-Tuning the config knobs and re-measuring drove a real, verifiable improvement on
-the (hard, multi-hop) HotpotQA slice — exactly the loop the AutoTuner automates
-in P5:
-
-| Config | faithfulness | answer relevancy | context recall |
-|---|---|---|---|
-| chunk 512 · top-k 4 · strict prompt | 0.36 | 0.18 | 0.57 |
-| chunk 1200 · top-k 8 | 0.49 | 0.26 | 0.73 |
-| **+ multi-hop synthesis prompt · reranker on** | **0.69** | **0.60** | **0.77** |
-
-A full 30-question run costs **~$0.06** on the default `gpt-4o-mini` judge.
-
-**DoD:** dashboard live at a public URL, reproducible on a fresh checkout. ✅
-(deploy steps below)
-
----
-
-## Deploy the dashboard (Streamlit Community Cloud)
-
-The dashboard reads committed `results/*.json` only — no secrets, no vector
-store — so deployment is a one-time click-through:
-
-1. Push this repo to a **public GitHub repo**.
-2. Go to [share.streamlit.io](https://share.streamlit.io) and sign in with GitHub.
-3. **New app** → pick the repo, branch `main`, main file path
-   `dashboard/app.py`.
-4. **Deploy.** No secrets needed. You get a public `*.streamlit.app` URL.
-
-To refresh the deployed data, run `python -m eval.run --tag baseline` locally
-and push the new `results/baseline-*.json`.
-
----
-
-## P2 — CI regression gate ✅
-
-A pytest suite scores the golden set with the RAGAS judge on every PR; GitHub
-Actions **blocks the merge** when mean faithfulness drops below the gate (0.60).
-
-```bash
-python -m pytest tests/test_regression.py -s -q     # ~30s, faithfulness only
-```
-
-- `tests/test_regression.py` — runs the real pipeline with the current config,
-  scores RAGAS faithfulness over the full golden set, fails if the mean < gate.
-  Self-explaining: each failing case prints its answer.
-- `.github/workflows/ci.yml` — install → `python -m rag ingest` → gate, on every
-  `pull_request` (and pushes to `main`). Needs an `OPENAI_API_KEY` repo secret.
-
-### Why the gate uses RAGAS faithfulness, not DeepEval's
-
-A finding worth stating plainly: **DeepEval and RAGAS define "faithfulness"
-differently.** DeepEval only flags claims that *contradict* the retrieved
-context; RAGAS flags claims that aren't *supported* by it. So DeepEval's
-faithfulness is blind to a retrieval regression, while RAGAS's catches it —
-measured on the same chunk-size change:
-
-| `chunk_size` | RAGAS faithfulness | DeepEval faithfulness |
-|---|---|---|
-| 1200 (baseline) | **0.71** | 0.75 |
-| 200 (regression) | **0.48** | 0.76 |
-
-The corollary matters for eval design: **faithfulness alone can't catch a
-retrieval regression** — you need a support-based judge (RAGAS) or a
-recall/relevancy metric. The gate uses RAGAS faithfulness for exactly this
-reason.
-
-### The caught regression
-
-A demo PR shrinks `chunk_size` 1200 → 200. Faithfulness drops **0.71 → 0.48**,
-below the 0.60 gate, and CI blocks the merge:
-
-<!-- TODO: screenshot of the blocked PR check (added when the demo PR runs) -->
-
-**DoD:** a demo PR that changes chunk size, drops faithfulness, and is blocked
-in CI. *(Gate + before/after verified locally; live demo PR pending — see
-"Tomorrow" steps.)*
+over `python -m rag ...` / `python -m eval.run ...` — use those directly if you
+don't have make.

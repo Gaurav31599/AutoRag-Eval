@@ -1,6 +1,6 @@
 {
-  "run_id": "baseline-20260705T003310Z",
-  "timestamp": "2026-07-05T00:33:10.527767+00:00",
+  "run_id": "baseline-20260705T173438Z",
+  "timestamp": "2026-07-05T17:34:38.623143+00:00",
   "tag": "baseline",
   "n_cases": 30,
   "config": {
@@ -13,22 +13,31 @@
     "judge_model": "gpt-4o-mini"
   },
   "aggregate": {
-    "faithfulness": 0.6916666666666667,
-    "answer_relevancy": 0.5979501093165035,
-    "context_precision": 0.6063888888430509,
-    "context_recall": 0.7666666666666667
+    "faithfulness": 0.7083333333333334,
+    "answer_relevancy": 0.5981392199804912,
+    "context_precision": 0.595277777734162,
+    "context_recall": 0.7333333333333333
+  },
+  "diagnostics": {
+    "stale_context": 1,
+    "low_faithfulness": 10
   },
   "cost": {
-    "generator_usd": 0.003774,
-    "judge_usd": 0.060747,
-    "total_usd": 0.064521,
+    "generator_usd": 0.0,
+    "judge_usd": 0.06069,
+    "diagnostics_usd": 0.005616,
+    "total_usd": 0.066306,
     "generator_tokens": {
-      "input": 22485,
-      "output": 668
+      "input": 0,
+      "output": 0
     },
     "judge_tokens": {
-      "input": 315184,
-      "output": 22449
+      "input": 315177,
+      "output": 22356
+    },
+    "diagnostics_tokens": {
+      "input": 30921,
+      "output": 1629
     }
   },
   "cases": [
@@ -46,9 +55,13 @@
         "Sir Harry Paget Flashman is a fictional character created by Thomas Hughes (1822\u20131896) in a semi-autobiographical \"Tom Brown's School Days\" (1857) and later developed by George MacDonald Fraser (1925\u20132008).  Harry Flashman appears in a series of 12 of Fraser's books, collectively known as \"The Flashman Papers\", with covers illustrated by Arthur Barbosa.  Flashman was played by Malcolm McDowell in the Richard Lester 1975 film \"Royal Flash\"."
       ],
       "faithfulness": 0.5,
-      "answer_relevancy": 0.8169354543416603,
+      "answer_relevancy": 0.8168513298693489,
       "context_precision": 0.9999999999,
-      "context_recall": 0.0
+      "context_recall": 0.0,
+      "context_supported": true,
+      "context_reason": "The retrieved passage [1] mentions that Oliver Reed played the role of Otto von Bismarck, who is a Prussian character.",
+      "stale_context": false,
+      "fail_reason": "The answer states that Otto von Bismarck was German, but the retrieved context does not explicitly confirm his nationality in relation to the film."
     },
     {
       "id": "5ac55ea55542993e66e82377",
@@ -66,7 +79,11 @@
       "faithfulness": 1.0,
       "answer_relevancy": 0.7273979665537619,
       "context_precision": 0.999999999975,
-      "context_recall": 1.0
+      "context_recall": 1.0,
+      "context_supported": true,
+      "context_reason": "The retrieved passages clearly state that the Pacific Mozart Ensemble performed Kurt Weill\u2019s Der Lindberghflug in 2002.",
+      "stale_context": false,
+      "fail_reason": null
     },
     {
       "id": "5ac3a76e554299741d48a2be",
@@ -82,9 +99,13 @@
         "U218 Singles is a greatest hits album by the Irish rock band U2, released in November 2006.  In most markets, the album contains 18 songs.  The first 16 tracks are 16 of their most successful and popular singles.  The seventeenth track is a cover version, in collaboration with Green Day, of The Skids' \"The Saints Are Coming\" to benefit Hurricane Katrina charities.  The eighteenth and closing track is a new song called, \"Window in the Skies\".  However, in some markets, such as the United Kingdom, an extra song, \"I Will Follow\" is added to the track list as the opening track. \" U218 Videos\", a DVD featuring music videos from throughout U2's career, was released concurrently."
       ],
       "faithfulness": 0.0,
-      "answer_relevancy": 0.6659247377006388,
+      "answer_relevancy": 0.6715619576889237,
       "context_precision": 0.9999999999,
-      "context_recall": 1.0
+      "context_recall": 1.0,
+      "context_supported": true,
+      "context_reason": "Passage [1] clearly states that 'With or Without You' is a song by U2 and provides details about its release, confirming that U2 released the song first.",
+      "stale_context": false,
+      "fail_reason": "The answer does not provide specific evidence or context to support the claim that U2 released the song 'With or Without You' first, despite the retrieved passages indicating its release date."
     },
     {
       "id": "5a7133565542994082a3e65c",
@@ -102,7 +123,11 @@
       "faithfulness": 0.5,
       "answer_relevancy": 0.576924546440312,
       "context_precision": 0.99999999995,
-      "context_recall": 1.0
+      "context_recall": 1.0,
+      "context_supported": true,
+      "context_reason": "Passage [2] explicitly states that Oldham County has a population of 60,316, confirming it as the correct answer.",
+      "stale_context": false,
+      "fail_reason": "The claim that Oldham County features the Lake Louisvilla neighborhood is only partially supported, as the retrieved context indicates that Lake Louisvilla is primarily located in Louisville, Kentucky."
     },
     {
       "id": "5ac1a4745542991316484b82",
@@ -120,7 +145,11 @@
       "faithfulness": 1.0,
       "answer_relevancy": 0.6664419760643938,
       "context_precision": 0.16666666665,
-      "context_recall": 1.0
+      "context_recall": 1.0,
+      "context_supported": true,
+      "context_reason": "The retrieved passage [6] explicitly states that the City of Salisbury has an estimated population of 138,535 people.",
+      "stale_context": false,
+      "fail_reason": null
     },
     {
       "id": "5adc597d55429947ff17392f",
@@ -138,7 +167,11 @@
       "faithfulness": 0.0,
       "answer_relevancy": -0.0,
       "context_precision": 0.0,
-      "context_recall": 0.0
+      "context_recall": 0.0,
+      "context_supported": false,
+      "context_reason": "None of the retrieved passages contain information about the year the narrator of 'Blackadder's Christmas Carol' was born.",
+      "stale_context": false,
+      "fail_reason": "The answer does not provide any information about the narrator's birth year, which is not mentioned in the retrieved passages."
     },
     {
       "id": "5ac55e835542993e66e82375",
@@ -155,8 +188,12 @@
       ],
       "faithfulness": 0.6666666666666666,
       "answer_relevancy": 0.8212471799698365,
-      "context_precision": 0.7499999999625,
-      "context_recall": 0.0
+      "context_precision": 0.6666666666333333,
+      "context_recall": 0.0,
+      "context_supported": true,
+      "context_reason": "The retrieved passages clearly state that Thomas Fitch defended Doc Holliday and the Earp brothers in relation to the events of the Gunfight at the O.K. Corral, which occurred on October 25, 1881.",
+      "stale_context": false,
+      "fail_reason": null
     },
     {
       "id": "5a8d9e0f554299441c6ba015",
@@ -174,7 +211,11 @@
       "faithfulness": 1.0,
       "answer_relevancy": 0.8700827074420848,
       "context_precision": 0.49999999995,
-      "context_recall": 1.0
+      "context_recall": 1.0,
+      "context_supported": true,
+      "context_reason": "Passage [2] explicitly states that Sunil Grover starred in the 2016 Punjabi film 'Vaisakhi List', which is the correct answer to the question.",
+      "stale_context": false,
+      "fail_reason": null
     },
     {
       "id": "5ae70ed7554299572ea546a1",
@@ -192,7 +233,11 @@
       "faithfulness": 1.0,
       "answer_relevancy": 0.6674206565281778,
       "context_precision": 0.7499999999625,
-      "context_recall": 1.0
+      "context_recall": 1.0,
+      "context_supported": true,
+      "context_reason": "Passage [1] mentions Charlie Murphy as the actor who plays the lead role in Twisted Fortune, directly linking him to the film directed by Victor Varnada.",
+      "stale_context": false,
+      "fail_reason": null
     },
     {
       "id": "5a74a8fa55429929fddd8497",
@@ -209,8 +254,12 @@
       ],
       "faithfulness": 0.6666666666666666,
       "answer_relevancy": 0.30904050099785035,
-      "context_precision": 0.9999999999,
-      "context_recall": 1.0
+      "context_precision": 0.7499999999625,
+      "context_recall": 1.0,
+      "context_supported": true,
+      "context_reason": "The first passage explicitly states that Dudman was Industrial Chaplain to the Bishop of Lincoln after his curacies, which directly answers the question.",
+      "stale_context": false,
+      "fail_reason": null
     },
     {
       "id": "5a7cb94f554299683c1c6353",
@@ -228,7 +277,11 @@
       "faithfulness": 0.5,
       "answer_relevancy": 0.6592997930988846,
       "context_precision": 0.19999999998,
-      "context_recall": 1.0
+      "context_recall": 1.0,
+      "context_supported": true,
+      "context_reason": "Passage [5] contains the title of Afroman's fifth studio album, which is 'The Hungry Hustlerz: Starvation Is Motivation', thus providing the first two words 'The Hungry'.",
+      "stale_context": false,
+      "fail_reason": "The claim that the first two words of Afroman's fifth studio album are 'The Hungry' is unsupported, as the album's title is actually 'The Hungry Hustlerz: Starvation Is Motivation'."
     },
     {
       "id": "5ab874ba5542990e739ec904",
@@ -246,7 +299,11 @@
       "faithfulness": 1.0,
       "answer_relevancy": 0.6105026503337262,
       "context_precision": 0.49999999995,
-      "context_recall": 1.0
+      "context_recall": 1.0,
+      "context_supported": true,
+      "context_reason": "Passage [2] explicitly states that General Omar Bradley was the first Chairman of the Joint Chiefs of Staff.",
+      "stale_context": false,
+      "fail_reason": null
     },
     {
       "id": "5ae3a8985542992f92d82329",
@@ -264,7 +321,11 @@
       "faithfulness": 1.0,
       "answer_relevancy": 0.8159065692580693,
       "context_precision": 0.9999999999,
-      "context_recall": 1.0
+      "context_recall": 1.0,
+      "context_supported": true,
+      "context_reason": "Passage [1] explicitly states that Lyman Sherwood was born in Rensselaer County, New York.",
+      "stale_context": false,
+      "fail_reason": null
     },
     {
       "id": "5ac39f7b554299218029dbe7",
@@ -282,7 +343,11 @@
       "faithfulness": 1.0,
       "answer_relevancy": 0.5910478292249596,
       "context_precision": 0.3333333333,
-      "context_recall": 1.0
+      "context_recall": 1.0,
+      "context_supported": true,
+      "context_reason": "Passage [3] explicitly states that Sinclair Oil Corporation was founded by Harry F. Sinclair, which directly answers the question about who originally founded the oil company owned by Robert Earl Holding.",
+      "stale_context": false,
+      "fail_reason": null
     },
     {
       "id": "5ae27b535542996483e649b6",
@@ -300,7 +365,11 @@
       "faithfulness": 1.0,
       "answer_relevancy": 0.3925505318838643,
       "context_precision": 0.99999999995,
-      "context_recall": 1.0
+      "context_recall": 1.0,
+      "context_supported": true,
+      "context_reason": "Passage [2] explicitly states that Axl Rose is the lead singer of Guns N' Roses, the band that performed 'November Rain', which is referenced in the chorus of 'On the Radio'.",
+      "stale_context": false,
+      "fail_reason": null
     },
     {
       "id": "5a7331de5542994cef4bc4a8",
@@ -318,7 +387,11 @@
       "faithfulness": 1.0,
       "answer_relevancy": 0.7757950169798099,
       "context_precision": 0.9999999999,
-      "context_recall": 1.0
+      "context_recall": 1.0,
+      "context_supported": true,
+      "context_reason": "The retrieved passages provide the necessary information that the Tenerife airport disaster occurred on March 27, 1977, which allows for the comparison of the dates of the two incidents.",
+      "stale_context": false,
+      "fail_reason": null
     },
     {
       "id": "5ac15de55542991316484afb",
@@ -333,10 +406,14 @@
         "\"Haven't Met You Yet\" is the first single from Canadian singer Michael Bubl\u00e9's fourth album, \"Crazy Love\", released on August 31, 2009.  According to Bubl\u00e9, the single and its official music video are \"about everyone's dream of finding a relationship and love.\"  Bubl\u00e9 co-wrote \"Haven't Met You Yet\" with Alan Chang and Amy Foster-Gilles, and dedicated it to his then fianc\u00e9e and now wife, Luisana Lopilato (who appears as his love interest in the music video).",
         "\"This Crazy Love\" is a song written by Roger Murrah and James Dean Hicks, and recorded by American country music group The Oak Ridge Boys.  It was released in June 1987 as the second single from the album \"Where the Fast Lane Ends\".  \"This Crazy Love\" was The Oak Ridge Boys' fifteenth number one on the country chart.  The single went to number one for one week and spent a total of fifteen weeks on the country chart.  It was released following the departure William Lee Golden in March 1987."
       ],
-      "faithfulness": 1.0,
+      "faithfulness": 0.5,
       "answer_relevancy": 0.8667848248545263,
       "context_precision": 0.9999999999,
-      "context_recall": 1.0
+      "context_recall": 0.0,
+      "context_supported": true,
+      "context_reason": "Both films were confirmed to be released in 2007, which supports the answer that they were not both released in 2008.",
+      "stale_context": false,
+      "fail_reason": "The claim that both Crazy Love and Welcome to Nollywood were released in 2007 is unsupported, as the answer incorrectly states that Crazy Love was released in 2007, while it was actually released in 2008."
     },
     {
       "id": "5a7c6c9d554299683c1c6302",
@@ -354,7 +431,11 @@
       "faithfulness": 0.0,
       "answer_relevancy": -0.0,
       "context_precision": 0.49999999995,
-      "context_recall": 0.0
+      "context_recall": 0.0,
+      "context_supported": false,
+      "context_reason": "None of the retrieved passages mention Duffy Jackson's birthplace or Nassau County.",
+      "stale_context": false,
+      "fail_reason": "The answer does not specify the county where Duffy Jackson was born, which is necessary to fully address the question."
     },
     {
       "id": "5ae6363b55429929b0807af0",
@@ -372,7 +453,11 @@
       "faithfulness": 0.0,
       "answer_relevancy": 0.0,
       "context_precision": 0.0,
-      "context_recall": 0.0
+      "context_recall": 0.0,
+      "context_supported": false,
+      "context_reason": "The retrieved passages do not provide the birth date of Ole Einar Bj\u00f8rndalen, the defending titlist.",
+      "stale_context": false,
+      "fail_reason": "The answer does not provide the birth date of Ole Einar Bj\u00f8rndalen, which is a specific detail that is not supported by the retrieved passages."
     },
     {
       "id": "5a8cea40554299441c6b9f76",
@@ -390,7 +475,11 @@
       "faithfulness": 1.0,
       "answer_relevancy": 0.9999999999999992,
       "context_precision": 0.0,
-      "context_recall": 1.0
+      "context_recall": 1.0,
+      "context_supported": true,
+      "context_reason": "The retrieved passages provide the elevations of both Gasherbrum II (8035 m) and Langtang Ri (7205 m), clearly indicating that Gasherbrum II is taller.",
+      "stale_context": false,
+      "fail_reason": null
     },
     {
       "id": "5ab5ecd75542992aa134a3e6",
@@ -408,7 +497,11 @@
       "faithfulness": 1.0,
       "answer_relevancy": 0.4016358682362266,
       "context_precision": 0.9166666666361111,
-      "context_recall": 1.0
+      "context_recall": 1.0,
+      "context_supported": true,
+      "context_reason": "The first retrieved passage explicitly states that John de Mol Jr. transferred all of his media activities to Talpa Holding.",
+      "stale_context": false,
+      "fail_reason": null
     },
     {
       "id": "5a84c5545542991dd0999dee",
@@ -426,7 +519,11 @@
       "faithfulness": 1.0,
       "answer_relevancy": 0.22378819874867015,
       "context_precision": 0.49999999995,
-      "context_recall": 1.0
+      "context_recall": 1.0,
+      "context_supported": true,
+      "context_reason": "Passage [2] explicitly states that the Plymouth Barracuda was manufactured from 1964 to 1974, which directly supports the known-correct answer.",
+      "stale_context": false,
+      "fail_reason": null
     },
     {
       "id": "5adeacf955429975fa854f66",
@@ -444,7 +541,11 @@
       "faithfulness": 0.0,
       "answer_relevancy": 0.5157695816472334,
       "context_precision": 0.9999999999,
-      "context_recall": 1.0
+      "context_recall": 1.0,
+      "context_supported": true,
+      "context_reason": "The first passage explicitly mentions Rachel Maddow as a commentator who has questioned the validity of CORE's non-profit status.",
+      "stale_context": false,
+      "fail_reason": "The claim that Michael Pollan specifically questioned the validity of CORE's non-profit status is only partially supported, as the retrieved context mentions that experts on non-profit law have questioned it, but does not provide direct evidence of Pollan's specific actions or statements regarding this issue."
     },
     {
       "id": "5a8ce15d554299653c1aa12f",
@@ -462,7 +563,11 @@
       "faithfulness": 0.75,
       "answer_relevancy": 0.9999999999999997,
       "context_precision": 0.0,
-      "context_recall": 0.0
+      "context_recall": 0.0,
+      "context_supported": false,
+      "context_reason": "The retrieved passages do not provide any information about the number of award nominations for Robert Wise or Zoltan Korda, making it impossible to determine if Robert Wise had more nominations.",
+      "stale_context": true,
+      "fail_reason": null
     },
     {
       "id": "5ade4da055429939a52fe878",
@@ -480,7 +585,11 @@
       "faithfulness": 1.0,
       "answer_relevancy": 0.7585638724968068,
       "context_precision": 0.32499999998375,
-      "context_recall": 1.0
+      "context_recall": 1.0,
+      "context_supported": true,
+      "context_reason": "Passages 4 and 5 explicitly state that Studio Ghibli, the studio that produced My Neighbor Totoro, was founded in 1985.",
+      "stale_context": false,
+      "fail_reason": null
     },
     {
       "id": "5ab2a186554299295394677b",
@@ -498,7 +607,11 @@
       "faithfulness": 1.0,
       "answer_relevancy": 0.6514176250901413,
       "context_precision": 0.49999999995,
-      "context_recall": 1.0
+      "context_recall": 1.0,
+      "context_supported": true,
+      "context_reason": "Passage [2] explicitly states that the Reading Post changed its name from the Reading Evening Post in 2009.",
+      "stale_context": false,
+      "fail_reason": null
     },
     {
       "id": "5ade66e1554299728e26c713",
@@ -514,9 +627,13 @@
         "The military and political career of Sim\u00f3n Bol\u00edvar, (July 24, 1783 \u2013 December 17, 1830), which included both formal service in the armies of various revolutionary regimes and actions organized by himself or in collaboration with other exiled patriot leaders during the years from 1811 to 1830, was an important element in the success of the independence wars in South America.  Given the unstable political climate during these years, Bol\u00edvar and other patriot leaders, such as Santiago Mari\u00f1o, Manuel Piar, Jos\u00e9 Francisco Berm\u00fadez and Francisco de Paula Santander often had to go into exile in the Caribbean or nearby areas of Spanish America that at the moment were controlled by those favoring independence, and from there, carry on the struggle.  These wars resulted in the creation of several South American states out of the former Spanish colonies, the currently existing Venezuela, Colombia, Ecuador, Peru and Bolivia, and the now defunct Gran Colombia."
       ],
       "faithfulness": 1.0,
-      "answer_relevancy": 0.8101224008984151,
+      "answer_relevancy": 0.8102426253020756,
       "context_precision": 0.9999999999666667,
-      "context_recall": 1.0
+      "context_recall": 1.0,
+      "context_supported": true,
+      "context_reason": "The second passage explicitly states that the Medell\u00edn Cartel operated throughout the 1970s and 1980s in Bolivia, Colombia, Central America, Peru, the United States, Canada, and Europe.",
+      "stale_context": false,
+      "fail_reason": null
     },
     {
       "id": "5a7c634c55429907fabeef79",
@@ -534,7 +651,11 @@
       "faithfulness": 0.6666666666666666,
       "answer_relevancy": 0.9129212971992624,
       "context_precision": 0.0,
-      "context_recall": 0.0
+      "context_recall": 0.0,
+      "context_supported": true,
+      "context_reason": "The retrieved passages provide the necessary information about the death dates of both Agatha Christie and Clement Greenberg, allowing for a direct comparison.",
+      "stale_context": false,
+      "fail_reason": null
     },
     {
       "id": "5ae13f3c5542997b2ef7d168",
@@ -549,10 +670,14 @@
         "The Sixth United States Army Group was an Allied Army Group that fought in the European Theater of Operations during World War II.  Made up of field armies from both the United States Army and the French Army, it fought in France, Germany, Austria, and, briefly, Italy.  Also referred to as the Southern Group of Armies, it was established in July 1944 and commanded throughout its duration by General Jacob L. Devers.",
         "Call of Duty: WWII is an upcoming first-person shooter video game developed by Sledgehammer Games and published by Activision for PlayStation 4, Xbox One and Microsoft Windows.  It is the fourteenth primary installment and first \"Call of Duty\" series game to be set primarily during World War II since \"\" in 2008.  The game is set in European theatre of the war.  The campaign is centered around a squad in the 1st Infantry Division, and follows their battles in the Western Front, while the multiplayer expands on different fronts not seen in the campaign.  Zombies mode also returns."
       ],
-      "faithfulness": 0.0,
+      "faithfulness": 1.0,
       "answer_relevancy": -0.0,
       "context_precision": 0.249999999975,
-      "context_recall": 1.0
+      "context_recall": 1.0,
+      "context_supported": true,
+      "context_reason": "Passage [4] mentions the Battle of Britain and the Battle of Malta, which are the two battles referenced in the question.",
+      "stale_context": false,
+      "fail_reason": null
     },
     {
       "id": "5ae17cd055429901ffe4aea3",
@@ -570,7 +695,11 @@
       "faithfulness": 0.5,
       "answer_relevancy": 0.8309814935057945,
       "context_precision": 0.99999999995,
-      "context_recall": 1.0
+      "context_recall": 1.0,
+      "context_supported": true,
+      "context_reason": "The retrieved passages clearly indicate that Alopecurus is common in temperate regions, while Pinanga is not found in the more northerly temperate regions, supporting the conclusion that Alopecurus is more common in temperate regions.",
+      "stale_context": false,
+      "fail_reason": "The claim that Alopecurus is more common in temperate regions than Pinanga is only partially supported, as the retrieved context does not provide a direct comparison of their prevalence in temperate regions."
     }
   ]
 }

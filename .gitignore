@@ -23,7 +23,8 @@ results/*.json
 !results/baseline-*.json
 !results/demo-*.json
 
-# OS / editor
+# OS / editor / agent tooling
 .DS_Store
 .idea/
 .vscode/
+.claude/

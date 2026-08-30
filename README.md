@@ -10,7 +10,7 @@ regressions in CI, surfaces a live dashboard, and closes into a loop that tunes
 the pipeline config on its own.
 
 - **API-first & cost-aware** — the generator and the LLM-as-judge both call an
-  API (default `gpt-4o-mini`; Claude Haiku selectable). Runs on an 8 GB laptop
+  API (default `gpt-4o-mini`). Runs on an 8 GB laptop
   GPU; no local model required. Tokens and $ are logged per run.
 - **Everything is config-driven** — every knob (chunk size, overlap, top-k,
   reranker, prompt, embedding model) lives in one [`config/rag.yaml`](config/rag.yaml).
@@ -19,9 +19,9 @@ the pipeline config on its own.
   context-correctness layer flags answers grounded in stale/wrong retrieved
   context even when faithfulness looks high.
 
-> Status: **P3 complete** — RAG target · eval harness · live dashboard · CI
-> regression gate · self-explaining diagnostics. P4–P5 (Langfuse monitoring,
-> AutoTuner) in progress.
+> Status: **Complete portfolio release** — RAG target · eval harness · live
+> dashboard · CI regression gate · self-explaining diagnostics · cost tracking.
+> Langfuse monitoring and AutoTuner remain roadmap extensions.
 
 ---
 

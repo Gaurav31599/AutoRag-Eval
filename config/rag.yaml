@@ -31,8 +31,8 @@ retrieval:
     top_n: 6                # keep this many after reranking
 
 generator:
-  provider: openai          # openai | anthropic
-  model: gpt-4o-mini        # anthropic option: claude-haiku-4-5-20251001
+  provider: openai
+  model: gpt-4o-mini
   temperature: 0.0
   max_tokens: 512
   prompt_template: |
@@ -49,10 +49,9 @@ generator:
     Answer:
 
 judge:                      # used from P1 onward (LLM-as-judge for RAGAS)
-  provider: openai          # openai | anthropic
-  model: gpt-4o-mini        # anthropic option: claude-haiku-4-5-20251001
+  provider: openai
+  model: gpt-4o-mini
   temperature: 0.0
 
 cost:                       # USD per 1M tokens, for per-run $ logging
   gpt-4o-mini: { input: 0.15, output: 0.60 }
-  claude-haiku-4-5-20251001: { input: 1.00, output: 5.00 }

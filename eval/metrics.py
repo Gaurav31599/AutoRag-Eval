@@ -1,6 +1,6 @@
 """RAGAS four-metric scoring via a configurable LLM-as-judge.
 
-Judge model comes from config (gpt-4o-mini default; Claude Haiku selectable).
+Judge model comes from config (gpt-4o-mini default).
 Embeddings for answer-relevancy run locally (sentence-transformers) to stay
 free and API-light. Judge token usage is captured so cost.py can price it.
 """
